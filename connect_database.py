@@ -4,6 +4,7 @@ from cassandra.query import SimpleStatement
 import json
 import datetime
 
+#boilerplate code to connect to cassandra
 def connect_to_cassandra():
     # Load secrets from JSON file
     with open("Phishing_Domain_Detection-token.json") as f:
