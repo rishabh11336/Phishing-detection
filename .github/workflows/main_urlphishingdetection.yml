@@ -62,8 +62,8 @@ jobs:
         run: unzip release.zip
 
         
-      - name: Azure Login
-        uses: Azure/login@v2.0.0
+      - name: Login to Azure
+        uses: azure/login@v1
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8463451E692F4266B4BEED717A04422A }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_C52BA24BFA6D44A0B6FD807C51A840DE }}
