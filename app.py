@@ -30,8 +30,7 @@ def predict():
 
     prediction = model.predict(parser.np_array())
 
-    output = prediction[0].item()  # Convert numpy integer to Python integer
-    # Add an entry
+    output = prediction[0].item()  
     result = "safe" if output == 0 else "phishing"
     print(parser.np_array())
     store_thread = threading.Thread(
