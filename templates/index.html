@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #80a280; /* Updated background color */
+            color: #fff; /* Updated text color */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            max-width: 400px;
+            background-color: rgba(128, 124, 124, 0.9); /* Semi-transparent background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Updated box shadow */
+            animation: slideIn 0.5s ease;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            width: calc(100% - 20px); /* Adjusted input width */
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #e8e4e4;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #2ecc71; /* Updated button color */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #27ae60; /* Updated hover color */
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            animation: fadeIn 0.5s forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="urlForm" method="post" action="/">
+            <label for="urlInput">Enter URL:</label>
+            <input type="text" id="urlInput" name="url" required>
+            <button type="submit">Submit</button>
+            <a href="/history">History</a>
+        </form>
+        <div id="result">
+                {% if prediction == 'Prediction says phishing URL' %}
+                    <p style="color: red;">{{ prediction }}</p>
+                    <p>{{ url }}</p>
+                {% elif prediction == 'Prediction says safe browsing URL' %}
+                    <p style="color: green;">{{ prediction }}</p>
+                    <p>{{ url }}</p>
+                {% elif prediction == 'broken url' %}
+                    <p style="color: rgb(31, 33, 34);">{{ prediction }}</p>
+                {% else %}
+                    <p style="color: rgb(216, 223, 225);">{{ prediction }}</p>
+                {% endif %}
+        </div>
+    </div>
+</body>
+</html>
