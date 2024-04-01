@@ -24,7 +24,7 @@ The project employs various machine learning algorithms tailored to the problem 
 - Cloud platform Azure is used for hosting the solution.
 
 ### Logging
-- Python logging library is employed for logging every action performed by the code.
+- Python logging library is employed for logging every action performed by the code. 
 
 ### Solution Design
 - Complete solution design strategies [**High-Level Design (HLD)**](https://github.com/rishabh11336/Phishing-Domain-Detection-Model/blob/main/High-Level%20Design%20(HLD).pdf) and [**Low-Level Design (LLD)**](https://www.example.com) documents.
