@@ -16,7 +16,7 @@ app = Flask(__name__)
 warnings.filterwarnings("ignore")
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename="app.log", format="%(levelname)s:%(name)s:%(message)s", level=logging.DEBUG)
+logging.basicConfig(filename="app.log", format="%(levelname)s:%(name)s:%(message)s", level=logging.INFO)
 
 model_path = os.path.join(
     os.path.dirname(__file__), "utils/trained_models/phishing_model.pkl"
