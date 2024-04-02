@@ -7,14 +7,14 @@ import logging
 from flask import Flask, request, jsonify, render_template
 import joblib
 from connect_database import add_entry, fetch_all_entries
-from azure.log.handlers import AzureBlobHandler
 
 from utils.url_parser import URLParser
 
 
 app = Flask(__name__)
 
-logging.basicConfig(filename='Logging/app.log', format="%(levelname)s:%(name)s:%(message)s")
+logger = logging.getLogger(__name__)
+logging.basicConfig(filename="app.log")
 
 model_path = os.path.join(
     os.path.dirname(__file__), "utils/trained_models/phishing_model.pkl"
@@ -75,8 +75,10 @@ def fetchui():
 @app.route("/", methods=["POST", "GET"])
 def predictui():
     if request.method == "GET":
+        logger.info("*****************Prediction opening *************************")
         return render_template('index.html', prediction="Enter URL to check if phishing or not", url=None)
     elif request.method == "POST":
+        logger.info("*****************Prediction for URL started *************************")
         url = request.form["url"]
         try:
             ip_address = request.remote_addr
@@ -98,7 +100,7 @@ def predictui():
             )
             store_thread.start()
             message = "Prediction says phishing URL" if output == 1 else "Prediction says safe browsing URL"
-            
+            logger.info(f"*****************Prediction for {url} is {message} *************************")
             return render_template('index.html', prediction=message, url=url)
         except Exception as e:
             print(e)

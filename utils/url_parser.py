@@ -149,6 +149,7 @@ import ssl
 from . import toolkit
 import numpy as np
 
+
 class URLParser:
     def __init__(self, url):
         self.url = url
@@ -307,6 +308,9 @@ class URLParser:
         }
         for key, value in resolving_components.items():
             print(key, value)
+        #     logger.info(f'{key},{value}')
+        # logger.info("Domain:", self.domain)
+        # logger.info("URL:", self.url)
         print("Domain:", self.domain)
         print("URL:", self.url)
         return resolving_components
