@@ -148,6 +148,7 @@ import socket
 import ssl
 from . import toolkit
 import numpy as np
+from app import logger
 
 
 class URLParser:
@@ -306,13 +307,14 @@ class URLParser:
             "domain_google_index": (1 if toolkit.is_domain_indexed(self.domain) else 0),
             "url_shortened": 1 if toolkit.is_shortened_url(self.url) else 0,
         }
+        
         for key, value in resolving_components.items():
-            print(key, value)
-        #     logger.info(f'{key},{value}')
-        # logger.info("Domain:", self.domain)
-        # logger.info("URL:", self.url)
-        print("Domain:", self.domain)
-        print("URL:", self.url)
+            # print(key, value)
+            logger.info(f'{key} {value}')
+        logger.info(f"Domain: {self.domain}")
+        logger.info(f"URL: {self.url}")
+        # print("Domain:", self.domain)
+        # print("URL:", self.url)
         return resolving_components
 
     def get_external_services_components(self):

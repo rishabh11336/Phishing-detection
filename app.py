@@ -8,21 +8,27 @@ from flask import Flask, request, jsonify, render_template
 import joblib
 from connect_database import add_entry, fetch_all_entries
 
-from utils.url_parser import URLParser
+
 
 
 app = Flask(__name__)
 
+warnings.filterwarnings("ignore")
+
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename="app.log")
+logging.basicConfig(format="%(levelname)s:%(name)s:%(message)s", level=logging.DEBUG)
 
 model_path = os.path.join(
     os.path.dirname(__file__), "utils/trained_models/phishing_model.pkl"
 )
 model = joblib.load(model_path)
 
+
+
+
 @app.route("/predict", methods=["POST"])
 def predict():
+    from utils.url_parser import URLParser
     ip_address = request.remote_addr
 
     data = request.get_json()
@@ -74,6 +80,7 @@ def fetchui():
 
 @app.route("/", methods=["POST", "GET"])
 def predictui():
+    from utils.url_parser import URLParser
     if request.method == "GET":
         logger.info("*****************Prediction opening *************************")
         return render_template('index.html', prediction="Enter URL to check if phishing or not", url=None)
