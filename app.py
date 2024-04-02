@@ -2,22 +2,24 @@ import warnings
 import os
 import datetime
 import threading
+import logging
 
 from flask import Flask, request, jsonify, render_template
 import joblib
 from connect_database import add_entry, fetch_all_entries
+from azure.log.handlers import AzureBlobHandler
 
 from utils.url_parser import URLParser
 
+
 app = Flask(__name__)
 
-
+logging.basicConfig(filename='Logging/app.log', format="%(levelname)s:%(name)s:%(message)s")
 
 model_path = os.path.join(
     os.path.dirname(__file__), "utils/trained_models/phishing_model.pkl"
 )
 model = joblib.load(model_path)
-
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -32,7 +34,6 @@ def predict():
 
     output = prediction[0].item()  
     result = "safe" if output == 0 else "phishing"
-    print(parser.np_array())
     store_thread = threading.Thread(
         target=add_entry,
         args=(
@@ -43,7 +44,7 @@ def predict():
         ),
     )
     store_thread.start()
-
+  
     return jsonify(
         {
             "prediction": output,
@@ -62,13 +63,13 @@ def fetch():
     all_entries = fetch_all_entries()
     for entry in all_entries:
         print(entry)
-
+    
     return jsonify(all_entries)
 
 @app.route("/history", methods=["GET"])
 def fetchui():
     all_entries = fetch_all_entries()
-
+    
     return render_template("history.html", history=all_entries)
 
 @app.route("/", methods=["POST", "GET"])
@@ -86,7 +87,6 @@ def predictui():
 
             output = prediction[0].item() 
             result = "safe" if output == 0 else "phishing"
-            print(parser.np_array())
             store_thread = threading.Thread(
                 target=add_entry,
                 args=(
@@ -98,9 +98,11 @@ def predictui():
             )
             store_thread.start()
             message = "Prediction says phishing URL" if output == 1 else "Prediction says safe browsing URL"
+            
             return render_template('index.html', prediction=message, url=url)
         except Exception as e:
             print(e)
+            
             return render_template('index.html', prediction="broken url", url=url)
 
 if __name__ == "__main__":

@@ -29,6 +29,27 @@ def connect_to_cassandra():
     
     return cluster, session
 
+# def add_table():
+#     cluster, session = connect_to_cassandra()
+#     columns_definition = ', '.join([f"{column_name} {column_type}" for column_name, column_type in columns.items()])
+#     columns = {
+#         'id': 'UUID',
+#         'time': 'TIMESTAMP',
+#         'log': 'TEXT'
+#         }
+#     # Create table
+#     create_query = session.prepare(
+#         f"""
+#         CREATE TABLE IF NOT EXISTS Logs (
+#             {columns_definition},
+#             PRIMARY KEY ({list(columns.keys())[0]})  # Assuming the first column is the primary key
+#         )
+#     """
+#     )
+#     session.execute(create_query)
+    
+#     cluster.shutdown()
+
 def add_entry(ip, time, url, pred):
     cluster, session = connect_to_cassandra()
     
