@@ -8,6 +8,7 @@ from flask import Flask, request, jsonify, render_template
 import joblib
 from connect_database import add_entry, fetch_all_entries
 
+from Logging.logcommit import commit_to_github
 
 app = Flask(__name__)
 
@@ -112,6 +113,14 @@ def predictui():
             
             return render_template('index.html', prediction="broken url", url=url)
 
+@app.after_request
+def after_request(response):
+    print("Request processed Successfully!")
+    date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    commit_message = f"Updating log for {date}"
+
+    commit_to_github(commit_message=commit_message)
+    return response
 
 
 if __name__ == "__main__":
