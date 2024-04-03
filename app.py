@@ -8,7 +8,6 @@ from flask import Flask, request, jsonify, render_template
 import joblib
 from connect_database import add_entry, fetch_all_entries
 
-from Logging.logcommit import commit_to_github
 
 
 app = Flask(__name__)
