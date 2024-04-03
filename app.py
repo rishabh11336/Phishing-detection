@@ -8,7 +8,7 @@ from flask import Flask, request, jsonify, render_template
 import joblib
 from connect_database import add_entry, fetch_all_entries
 
-
+from Logging.logcommit import commit_to_github
 
 
 app = Flask(__name__)
@@ -16,7 +16,7 @@ app = Flask(__name__)
 warnings.filterwarnings("ignore")
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(filename="app.log", format="%(levelname)s:%(name)s:%(message)s", level=logging.INFO)
+logging.basicConfig(filename="Logging/app.log", format="%(levelname)s:%(name)s:%(message)s", level=logging.INFO)
 
 model_path = os.path.join(
     os.path.dirname(__file__), "utils/trained_models/phishing_model.pkl"
@@ -113,6 +113,16 @@ def predictui():
             print(e)
             
             return render_template('index.html', prediction="broken url", url=url)
+
+@app.after_request
+def after_request(response):
+    print("Request processed Successfully!")
+    date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    commit_message = f"Updating log for {date}"
+
+    commit_to_github(commit_message=commit_message)
+    return response
+
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
