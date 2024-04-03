@@ -99,3 +99,7 @@ def commit_to_github(commit_message):
         files,
         log_directory,
     )
+
+if __name__ == "__main__":
+    commit_message = f"Update logs at {datetime.datetime.now()}"
+    commit_to_github(commit_message)
