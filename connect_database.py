@@ -3,19 +3,19 @@ from cassandra.auth import PlainTextAuthProvider
 from cassandra.query import SimpleStatement
 import json
 import datetime
+import os
+
 
 #boilerplate code to connect to cassandra
 def connect_to_cassandra():
-    # Load secrets from JSON file
-    with open("Phishing_Domain_Detection-token.json") as f:
-        secrets = json.load(f)
-
     # Extracting required secrets
-    CLIENT_ID = secrets["clientId"]
-    CLIENT_SECRET = secrets["secret"]
+    from dotenv import load_dotenv
+    load_dotenv()
+    CLIENT_ID = os.environ["clientId"]
+    CLIENT_SECRET = os.environ["secret"]
 
     # Cassandra cloud configuration
-    cloud_config = {"secure_connect_bundle": "secure-connect-phishing-domain-detection.zip"}
+    cloud_config = {"secure_connect_bundle": "secure-connect-phishing-detection.zip"}
 
     # Authentication provider
     auth_provider = PlainTextAuthProvider(CLIENT_ID, CLIENT_SECRET)
@@ -25,30 +25,25 @@ def connect_to_cassandra():
     session = cluster.connect()
 
     # Switch to the keyspace
-    session.set_keyspace("log_data")
+    session.set_keyspace("phishingdetectionlog")
     
     return cluster, session
 
-# def add_table():
-#     cluster, session = connect_to_cassandra()
-#     columns_definition = ', '.join([f"{column_name} {column_type}" for column_name, column_type in columns.items()])
-#     columns = {
-#         'id': 'UUID',
-#         'time': 'TIMESTAMP',
-#         'log': 'TEXT'
-#         }
-#     # Create table
-#     create_query = session.prepare(
-#         f"""
-#         CREATE TABLE IF NOT EXISTS Logs (
-#             {columns_definition},
-#             PRIMARY KEY ({list(columns.keys())[0]})  # Assuming the first column is the primary key
-#         )
-#     """
-#     )
-#     session.execute(create_query)
+def add_table():
+    cluster, session = connect_to_cassandra()
+    # columns_definition = ', '.join([f"{column_name} {column_type}" for column_name, column_type in columns.items()])
+    create_table_query = """
+    CREATE TABLE IF NOT EXISTS phishingdetectionlog.phishing_data (
+        ip text,
+        time timestamp,
+        url text,
+        pred text,
+        PRIMARY KEY (ip, time)
+    );"""
+
+    session.execute(create_table_query)
     
-#     cluster.shutdown()
+    cluster.shutdown()
 
 def add_entry(ip, time, url, pred):
     cluster, session = connect_to_cassandra()
@@ -80,3 +75,6 @@ def fetch_all_entries():
     cluster.shutdown()
 
     return entries
+
+if __name__ == "__main__":
+    add_table()
