@@ -15,7 +15,7 @@ The project employs various machine learning algorithms tailored to the problem 
 
 ### Technologies Used
 - [**Machine Learning Technology scikt-learn**](https://scikit-learn.org/stable/index.html)
-- [**Python**](https://www.python.org/)
+- [**Python**](https://www.python.org/) python 3.9
 
 ### Database
 - Cassandra database is utilized for this project.

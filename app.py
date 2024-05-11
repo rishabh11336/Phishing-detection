@@ -1,7 +1,6 @@
 import warnings
 import os
 import datetime
-import threading
 import logging
 
 from flask import Flask, request, jsonify, render_template
@@ -39,16 +38,15 @@ def predict():
 
     output = prediction[0].item()  
     result = "safe" if output == 0 else "phishing"
-    store_thread = threading.Thread(
-        target=add_entry,
-        args=(
+    
+    add_entry(
             ip_address,
             datetime.datetime.now(),
             url,
             result,
-        ),
-    )
-    store_thread.start()
+        )
+    
+    
   
     return jsonify(
         {
@@ -95,16 +93,12 @@ def predictui():
 
             output = prediction[0].item() 
             result = "safe" if output == 0 else "phishing"
-            store_thread = threading.Thread(
-                target=add_entry,
-                args=(
+            add_entry(
                     ip_address,
                     datetime.datetime.now(),
                     url,
                     result,
-                ),
-            )
-            store_thread.start()
+                )
             message = "Prediction says phishing URL" if output == 1 else "Prediction says safe browsing URL"
             logger.info(f"*****************Prediction for {url} is {message} *************************")
             return render_template('index.html', prediction=message, url=url)
