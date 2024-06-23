@@ -71,9 +71,13 @@ def fetch():
 
 @app.route("/history", methods=["GET"])
 def fetchui():
-    all_entries = fetch_all_entries()
-    
-    return render_template("history.html", history=all_entries)
+    try:
+        all_entries = fetch_all_entries()
+        
+        return render_template("history.html", history=all_entries)
+    except Exception as e:
+        print(e)
+        return "<h1>Cassandra Database is sleeping</h1>"
 
 @app.route("/", methods=["POST", "GET"])
 def predictui():
