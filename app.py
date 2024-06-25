@@ -97,18 +97,21 @@ def predictui():
 
             output = prediction[0].item() 
             result = "safe" if output == 0 else "phishing"
-            add_entry(
+            message = "Prediction says phishing URL" if output == 1 else "Prediction says safe browsing URL"
+            logger.info(f"*****************Prediction for {url} is {message} *************************")
+            try:
+                add_entry(
                     ip_address,
                     datetime.datetime.now(),
                     url,
                     result,
-                )
-            message = "Prediction says phishing URL" if output == 1 else "Prediction says safe browsing URL"
-            logger.info(f"*****************Prediction for {url} is {message} *************************")
+                    )
+            except Exception as e:
+                print(e)
+                logger.error(f"*****************Database is not working*************************")
             return render_template('index.html', prediction=message, url=url)
         except Exception as e:
             print(e)
-            
             return render_template('index.html', prediction="broken url", url=url)
 
 @app.after_request
